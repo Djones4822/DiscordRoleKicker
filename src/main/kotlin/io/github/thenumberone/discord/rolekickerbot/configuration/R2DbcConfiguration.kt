@@ -41,7 +41,8 @@ import org.springframework.core.convert.converter.Converter
 import org.springframework.data.convert.ReadingConverter
 import org.springframework.data.convert.WritingConverter
 import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration
-import org.springframework.data.r2dbc.connectionfactory.init.ConnectionFactoryInitializer
+import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer
+import org.springframework.r2dbc.connection.init.DatabasePopulator
 import java.time.Duration
 import java.time.Instant
 

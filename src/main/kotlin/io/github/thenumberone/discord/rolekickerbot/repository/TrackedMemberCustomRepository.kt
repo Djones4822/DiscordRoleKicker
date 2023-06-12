@@ -74,6 +74,7 @@ class TrackedMemberCustomRepositoryImpl(
             )
             .fetch()
             .awaitRowsUpdated()
+            
         val toNotInsert = client
             .select()
             .from(TrackedMember::class.java)

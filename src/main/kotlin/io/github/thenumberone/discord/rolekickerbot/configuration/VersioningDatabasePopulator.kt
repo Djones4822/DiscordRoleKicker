@@ -31,8 +31,8 @@ import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
-import org.springframework.data.r2dbc.connectionfactory.init.DatabasePopulator
-import org.springframework.data.r2dbc.connectionfactory.init.ResourceDatabasePopulator
+import org.springframework.r2dbc.connection.init.DatabasePopulator
+import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toFlux
