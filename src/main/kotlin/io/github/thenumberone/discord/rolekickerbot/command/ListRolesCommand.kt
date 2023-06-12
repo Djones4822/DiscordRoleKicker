@@ -48,10 +48,15 @@ class ListRolesCommand(private val roleKickService: RoleKickService, private val
         val guild = event.guild.awaitFirstOrNull() ?: return
         val guildId = guild.id
         val rules = roleKickService.getRules(guildId)
-
-        embedHelper.respondTo(event, title) {
-            for (rule in rules) {
-                addRule(rule)
+        if(rules.size == 0 ){
+            embedHelper.respondTo(event, title) {
+                setDescription("No Roles Added to Desertion Tracking.")
+            }
+        }else{
+            embedHelper.respondTo(event, title) {
+                for (rule in rules) {
+                    addRule(rule)
+                }
             }
         }
         event.member.get().mention

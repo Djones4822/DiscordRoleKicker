@@ -30,15 +30,25 @@ import discord4j.core.event.domain.guild.GuildCreateEvent
 import io.github.thenumberone.discord.rolekickerbot.service.RoleKickService
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.springframework.stereotype.Component
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 
 @Component
 class GuildSyncEventListener(private val roleKickService: RoleKickService) : DiscordEventListener<GuildCreateEvent> {
+    companion object {
+        val logger: Logger = LoggerFactory.getLogger(GuildSyncEventListener::class.java)
+    }
+
     override suspend fun on(event: GuildCreateEvent) {
         val roles = event.guild.roleIds
+        logger.info("Found ${roles.size} roles in guild ${event.guild.id}")
         val members: List<Member> = event.guild.requestMembers().collectList().awaitFirstOrNull() ?: return
+        logger.info("Found ${members.size} members in guild ${event.guild.id}")
         val membersToRoles = members.map { member ->
             member.id to member.roleIds
         }.toMap()
+        logger.info("Beginning sync for guild ${event.guild.id}")
         roleKickService.syncGuild(event.guild.id, roles, membersToRoles)
     }
 }

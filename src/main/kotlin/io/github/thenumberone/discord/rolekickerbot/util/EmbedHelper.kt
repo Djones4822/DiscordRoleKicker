@@ -33,15 +33,22 @@ import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.stereotype.Component
 import java.time.Instant
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 @Component
 class EmbedHelper(val self: SelfBotInfo) {
+    companion object {
+        val logger: Logger = LoggerFactory.getLogger(EmbedHelper::class.java)
+    }
+
     suspend fun withTemplate(
         title: String? = null,
         builder: EmbedCreateSpec.() -> Unit = {}
     ): EmbedCreateSpec.() -> Unit {
         val name = self.getBotName()
         val imgUrl = self.getImgUrl()
+
         return {
             setColor(Color.of(255, 255, 254))
             setAuthor(name, null, imgUrl)
@@ -52,10 +59,12 @@ class EmbedHelper(val self: SelfBotInfo) {
     }
 
     suspend fun respondTo(event: MessageCreateEvent, title: String? = null, builder: EmbedCreateSpec.() -> Unit) {
+        logger.debug("Responding to event.")
         send(event.message.channel.awaitFirstOrNull() ?: return, title, builder)
     }
 
     suspend fun send(channel: MessageChannel, title: String? = null, builder: EmbedCreateSpec.() -> Unit) {
+        logger.debug("Sending embed to channel.")
         channel.createEmbed(withTemplate(title, builder)).awaitSingle()
     }
 }

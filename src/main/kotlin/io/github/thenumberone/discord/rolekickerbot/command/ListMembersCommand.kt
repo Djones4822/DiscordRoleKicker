@@ -56,7 +56,11 @@ class ListMembersCommand(private val roleKickService: RoleKickService, private v
 
         val roleIdsToMembers = members.groupBy { it.roleId }
 
-        if (members.size < pageCutoff) {
+        if (members.size == 0) {
+            embedHelper.respondTo(event, title) {
+                setDescription("No Members Currently Tracked")
+            }
+        } else if (members.size < pageCutoff) {
             embedHelper.respondTo(event, title) {
                 for ((roleId, roleMembers) in roleIdsToMembers) {
                     fillSpec(rules.getValue(roleId), roleMembers)
@@ -103,7 +107,6 @@ class ListMembersCommand(private val roleKickService: RoleKickService, private v
 
         addField("Role", mentionRole(rule.roleId), false)
         addField("User", memberMentions.joinToString("\n"), true)
-        addField("Time Til Warning", timeTilWarnLines.joinToString("\n"), true)
         addField("Time Til Kick", timeTilKickLines.joinToString("\n"), true)
     }
 

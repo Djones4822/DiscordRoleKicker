@@ -133,40 +133,59 @@ class DefaultRoleKickService(
         memberIdsToRoleIds: Map<Snowflake, Set<Snowflake>>
     ) {
         transaction.executeAndAwait {
+            // remove rules for any roles that no longer exist
             roleKickRuleRepository.deleteAllByGuildIdAndRoleIdNotIn(guildId, roleIds)
 
             val rules = roleKickRuleRepository.findAllByGuildId(guildId).toList()
-            val matchingRules = memberIdsToRoleIds.mapValues { (_, memberRoleIds) ->
-                rules.filter { it.roleId in memberRoleIds }.map { it.roleId }
+            if( rules.size > 0){
+                logger.info { "Found ${rules.size} rules for guild $guildId" }
+                val matchingRules = memberIdsToRoleIds.mapValues { (_, memberRoleIds) ->
+                    rules.filter { it.roleId in memberRoleIds }.map { it.roleId }
+                }
+                trackedMembersRepository.syncGuild(guildId, matchingRules, Instant.now())
+            }else{
+                logger.info { "No rules to sync in guild $guildId" }
             }
-            trackedMembersRepository.syncGuild(guildId, matchingRules, Instant.now())
         } ?: error("Problem syncing guild")
         scheduler.refresh()
         logger.info { "Synchronized guild $guildId" }
     }
 
     override suspend fun scanMember(guildId: Snowflake, memberId: Snowflake, roleIds: Set<Snowflake>) {
-        transaction.executeAndAwait {
-            val rules = roleKickRuleRepository
-                .findAllByGuildIdAndRoleIdIn(guildId, roleIds)
-                .toList()
-                .map { it.roleId }
-
-            trackedMembersRepository.syncMember(guildId, memberId, rules, Instant.now())
+        logger.debug { "Recieved scanMember call for $memberId in guild $guildId" }
+        val rules = roleKickRuleRepository
+            .findAllByGuildIdAndRoleIdIn(guildId, roleIds)
+            .toList()
+            .map { it.roleId }
+        if (rules.size > 0){
+            transaction.executeAndAwait {
+                trackedMembersRepository.syncMember(guildId, memberId, rules, Instant.now())
+            }
+            scheduler.refresh()
+            logger.info { "Scanned member $memberId in guild $guildId" }
+        }else {
+            logger.debug { "Scan member called but no rules to process." }
         }
-        scheduler.refresh()
-        logger.info { "Scanned member $memberId in guild $guildId" }
     }
 
     override suspend fun removeMember(guildId: Snowflake, memberId: Snowflake) {
-        transaction.executeAndAwait {
+        val deleted = transaction.executeAndAwait {
             trackedMembersRepository.deleteAllByGuildIdAndMemberId(guildId, memberId)
         }
         scheduler.refresh()
-        logger.info { "Removed member $memberId from guild $guildId" }
+        if (deleted == 1){
+            logger.info { "Removed member $memberId from guild $guildId" }
+        }
     }
 
     override suspend fun updateMember(guildId: Snowflake, memberId: Snowflake, roleIds: Set<Snowflake>) {
+        logger.debug { "Recieved updateMember call for $memberId in $guildId" }
+        val rules = roleKickRuleRepository.findAllByGuildId(guildId).toList()
+        if( rules.size == 0){
+            logger.debug { "Update member called but no rules to process." }
+            return
+        }
+        logger.debug { "Scanning $memberId in guild $guildId" }
         transaction.executeAndAwait {
             scanMember(guildId, memberId, roleIds)
         }
