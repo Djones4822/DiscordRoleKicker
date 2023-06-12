@@ -27,7 +27,7 @@ package io.github.thenumberone.discord.rolekickerbot.command
 
 import discord4j.common.util.Snowflake
 import discord4j.core.event.domain.message.MessageCreateEvent
-import discord4j.core.spec.EmbedCreateSpec
+import discord4j.core.spec.legacy.LegacyEmbedCreateSpec
 import io.github.thenumberone.discord.rolekickerbot.data.RoleKickRule
 import io.github.thenumberone.discord.rolekickerbot.service.RoleKickService
 import io.github.thenumberone.discord.rolekickerbot.util.EmbedHelper
@@ -63,7 +63,7 @@ class ListRolesCommand(private val roleKickService: RoleKickService, private val
     }
 }
 
-fun EmbedCreateSpec.addRule(rule: RoleKickRule) {
+fun LegacyEmbedCreateSpec.addRule(rule: RoleKickRule) {
     addField("Role", mentionRole(rule.roleId), false)
     addField("Warning Time", rule.timeTilWarning.toAbbreviatedString(), true)
     addField("Kick Time", rule.timeTilKick.toAbbreviatedString(), true)

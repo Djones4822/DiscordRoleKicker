@@ -25,7 +25,7 @@
 
 package io.github.thenumberone.discord.rolekickerbot.util
 
-import discord4j.core.spec.EmbedCreateSpec
+import discord4j.core.spec.legacy.LegacyEmbedCreateSpec
 import mu.KotlinLogging
 import java.time.Duration
 
@@ -106,7 +106,7 @@ fun Duration.toAbbreviatedString(fineDetail: Boolean = false) = buildString {
 }
 
 
-fun EmbedCreateSpec.displayDurationHelp() {
+fun LegacyEmbedCreateSpec.displayDurationHelp() {
     addField("Syntax", "`(<number><modifier>)+`", false)
     addField("Number", "Can be positive or negative. No decimal digits/fractional numbers.", false)
     addField("Modifiers", "w, d, h, m, s, ms, ns", false)

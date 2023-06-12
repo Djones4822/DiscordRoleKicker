@@ -27,7 +27,7 @@ package io.github.thenumberone.discord.rolekickerbot.util
 
 import discord4j.core.`object`.entity.channel.MessageChannel
 import discord4j.core.event.domain.message.MessageCreateEvent
-import discord4j.core.spec.EmbedCreateSpec
+import discord4j.core.spec.legacy.LegacyEmbedCreateSpec
 import discord4j.rest.util.Color
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
@@ -44,8 +44,8 @@ class EmbedHelper(val self: SelfBotInfo) {
 
     suspend fun withTemplate(
         title: String? = null,
-        builder: EmbedCreateSpec.() -> Unit = {}
-    ): EmbedCreateSpec.() -> Unit {
+        builder: LegacyEmbedCreateSpec.() -> Unit = {}
+    ): LegacyEmbedCreateSpec.() -> Unit {
         val name = self.getBotName()
         val imgUrl = self.getImgUrl()
 
@@ -58,12 +58,12 @@ class EmbedHelper(val self: SelfBotInfo) {
         }
     }
 
-    suspend fun respondTo(event: MessageCreateEvent, title: String? = null, builder: EmbedCreateSpec.() -> Unit) {
+    suspend fun respondTo(event: MessageCreateEvent, title: String? = null, builder: LegacyEmbedCreateSpec.() -> Unit) {
         logger.debug("Responding to event.")
         send(event.message.channel.awaitFirstOrNull() ?: return, title, builder)
     }
 
-    suspend fun send(channel: MessageChannel, title: String? = null, builder: EmbedCreateSpec.() -> Unit) {
+    suspend fun send(channel: MessageChannel, title: String? = null, builder: LegacyEmbedCreateSpec.() -> Unit) {
         logger.debug("Sending embed to channel.")
         channel.createEmbed(withTemplate(title, builder)).awaitSingle()
     }

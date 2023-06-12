@@ -30,9 +30,9 @@ import discord4j.core.`object`.entity.channel.MessageChannel
 import discord4j.core.`object`.reaction.ReactionEmoji
 import discord4j.core.event.domain.message.ReactionAddEvent
 import discord4j.core.event.domain.message.ReactionRemoveEvent
-import discord4j.core.spec.EmbedCreateSpec
-import discord4j.core.spec.MessageCreateSpec
-import discord4j.core.spec.MessageEditSpec
+import discord4j.core.spec.legacy.LegacyEmbedCreateSpec
+import discord4j.core.spec.legacy.LegacyMessageCreateSpec
+import discord4j.core.spec.legacy.LegacyMessageEditSpec
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirstOrNull
@@ -53,7 +53,7 @@ data class MessageInteraction(
 fun interactiveMessage(
     channel: MessageChannel,
     time: Duration,
-    interactiveMessage: (MessageCreateSpec) -> Unit
+    interactiveMessage: (LegacyMessageCreateSpec) -> Unit
 ): MessageInteraction {
     val messageMono = channel.createMessage(interactiveMessage).cache()
     val stopMessage = Mono.delay(time).then()
@@ -103,8 +103,8 @@ class StopPagingException : Exception()
 fun pagedMessage(
     channel: MessageChannel,
     numPages: Int,
-    firstMessage: (MessageCreateSpec) -> Unit,
-    pages: (index: Int, MessageEditSpec) -> Unit,
+    firstMessage: (LegacyMessageCreateSpec) -> Unit,
+    pages: (index: Int, LegacyMessageEditSpec) -> Unit,
     time: Duration = Duration.ofMinutes(5)
 ): Mono<Void> {
     val (messageMono, reactionAdds, _) = interactiveMessage(channel, time, firstMessage)
@@ -161,7 +161,7 @@ fun pagedMessage(
     channel: MessageChannel,
     numPages: Int,
     time: Duration = Duration.ofMinutes(5),
-    pages: (index: Int, EmbedCreateSpec) -> Unit
+    pages: (index: Int, LegacyEmbedCreateSpec) -> Unit
 ): Mono<Void> {
     return pagedMessage(
         channel,

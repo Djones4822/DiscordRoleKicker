@@ -26,7 +26,7 @@
 package io.github.thenumberone.discord.rolekickerbot.command
 
 import discord4j.core.event.domain.message.MessageCreateEvent
-import discord4j.core.spec.EmbedCreateSpec
+import discord4j.core.spec.legacy.LegacyEmbedCreateSpec
 import io.github.thenumberone.discord.rolekickerbot.data.RoleKickRule
 import io.github.thenumberone.discord.rolekickerbot.data.TrackedMember
 import io.github.thenumberone.discord.rolekickerbot.service.RoleKickService
@@ -72,7 +72,7 @@ class ListMembersCommand(private val roleKickService: RoleKickService, private v
             }
             val template = embedHelper.withTemplate(title)
 
-            pagedMessage(event.message.channel.awaitSingle(), pages.size) { index, embedCreateSpec ->
+            pagedMessage(event.message.channel.awaitSingle(), pages.size) { index, embedCreateSpec: LegacyEmbedCreateSpec ->
                 val (roleId, trackedMembers) = pages[index]
                 embedCreateSpec.apply {
                     template()
@@ -83,7 +83,7 @@ class ListMembersCommand(private val roleKickService: RoleKickService, private v
         }
     }
 
-    fun EmbedCreateSpec.fillSpec(rule: RoleKickRule, trackedMembers: List<TrackedMember>) {
+    fun LegacyEmbedCreateSpec.fillSpec(rule: RoleKickRule, trackedMembers: List<TrackedMember>) {
         val now = Instant.now()
         val memberMentions = mutableListOf<String>()
         val timeTilWarnLines = mutableListOf<String>()

@@ -25,13 +25,20 @@
 
 package io.github.thenumberone.discord.rolekickerbot.listeners
 
+import discord4j.common.util.Snowflake
 import discord4j.core.event.domain.guild.MemberUpdateEvent
 import io.github.thenumberone.discord.rolekickerbot.service.RoleKickService
 import org.springframework.stereotype.Component
+import kotlinx.coroutines.reactive.awaitFirstOrNull
 
+
+fun <T> convertToSet(list: List<T>): Set<T> {
+    return list.toSet()
+}
+ 
 @Component
 class MemberAddRoleListener(private val roleKickService: RoleKickService) : DiscordEventListener<MemberUpdateEvent> {
     override suspend fun on(event: MemberUpdateEvent) {
-        roleKickService.updateMember(event.guildId, event.memberId, event.currentRoles)
+        roleKickService.updateMember(event.guildId, event.memberId, event.getCurrentRoleIds())
     }
 }
