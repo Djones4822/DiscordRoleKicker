@@ -37,8 +37,9 @@ class PingCommand(val embedHelper: EmbedHelper) : SingleNameCommand {
 
     override suspend fun exec(event: MessageCreateEvent, commandText: String) {
         embedHelper.respondTo(event) {
+            val msgTs: Long = (java.time.Instant.now().toEpochMilli() - event.getMessage().getTimestamp().toEpochMilli())
             setTitle("Pong")
-            setDescription(commandText)
+            setDescription("`$msgTs`ms")
         }
     }
 }
