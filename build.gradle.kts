@@ -37,7 +37,7 @@ plugins {
 }
 
 group = "io.github.thenumberone"
-version = "1.1.3"
+version = "1.1.4"
 java.sourceCompatibility = JavaVersion.VERSION_11
 java.targetCompatibility = JavaVersion.VERSION_11
 
@@ -57,7 +57,7 @@ repositories {
 dependencies {
     implementation("io.github.microutils:kotlin-logging:1.7.9")
 
-    implementation("com.discord4j:discord4j-core:3.1.0-SNAPSHOT")
+    implementation("com.discord4j:discord4j-core:3.1.0")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
