@@ -28,16 +28,16 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     application
     idea
-    id("org.springframework.boot") version "2.3.0.RELEASE"
+    id("org.springframework.boot") version "2.4.13"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     kotlin("jvm") version "1.3.71"
     kotlin("plugin.spring") version "1.3.71"
-    kotlin("kapt") version "1.3.72"
+    kotlin("kapt") version "1.4.32"
     id("com.google.cloud.tools.jib") version "2.4.0"
 }
 
 group = "io.github.thenumberone"
-version = "1.1.4"
+version = "1.1.5"
 java.sourceCompatibility = JavaVersion.VERSION_11
 java.targetCompatibility = JavaVersion.VERSION_11
 
@@ -55,19 +55,20 @@ repositories {
 }
 
 dependencies {
+
     implementation("io.github.microutils:kotlin-logging:1.7.9")
 
     implementation("com.discord4j:discord4j-core:3.2.0")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.3.5")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-    implementation("io.projectreactor.netty:reactor-netty:0.9.7.RELEASE")
+    implementation("io.projectreactor.netty:reactor-netty:1.0.32")
     testImplementation("io.projectreactor:reactor-test")
 
-    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc:2.3.12.RELEASE")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -81,7 +82,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.10.0")
     testImplementation("com.ninja-squad:springmockk:2.0.1")
 
-    testImplementation("io.kotest:kotest-assertions-core-jvm:4.1.0.291-SNAPSHOT")
+    testImplementation("io.kotest:kotest-assertions-core-jvm:4.1.3")
 }
 
 tasks.withType<Test> {
@@ -101,5 +102,5 @@ application {
 }
 
 kapt {
-    includeCompileClasspath = false
+    includeCompileClasspath =  false
 }
