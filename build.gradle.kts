@@ -57,7 +57,7 @@ repositories {
 dependencies {
     implementation("io.github.microutils:kotlin-logging:1.7.9")
 
-    implementation("com.discord4j:discord4j-core:3.1.0")
+    implementation("com.discord4j:discord4j-core:3.2.0")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
